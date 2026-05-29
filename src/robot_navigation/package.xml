@@ -3,7 +3,7 @@
 <package format="3">
   <name>robot_navigation</name>
   <version>0.0.1</version>
-  <description>机器人导航包</description>
+  <description>Nav2 导航包</description>
   <maintainer email="user@todo.todo">user</maintainer>
   <license>TODO</license>
 
@@ -15,6 +15,10 @@
   <depend>geometry_msgs</depend>
   <depend>nav_msgs</depend>
   <depend>tf2_ros</depend>
+
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+  <exec_depend>nav2_bt_navigator</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>

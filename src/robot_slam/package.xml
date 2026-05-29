@@ -3,17 +3,20 @@
 <package format="3">
   <name>robot_slam</name>
   <version>0.0.1</version>
-  <description>SLAM建图包</description>
+  <description>Cartographer SLAM 建图包</description>
   <maintainer email="user@todo.todo">user</maintainer>
   <license>TODO</license>
 
   <buildtool_depend>ament_cmake</buildtool_depend>
 
   <depend>rclpy</depend>
-  <depend>slam_toolbox</depend>
+  <depend>cartographer_ros</depend>
   <depend>nav_msgs</depend>
   <depend>sensor_msgs</depend>
   <depend>tf2_ros</depend>
+
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>rviz2</exec_depend>
 
   <export>
     <build_type>ament_cmake</build_type>
