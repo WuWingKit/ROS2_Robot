@@ -1,0 +1,137 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gazebo_plugins">
+
+  <!-- ============================================================ -->
+  <!-- Gazebo 差速驱动插件                                           -->
+  <!-- 使用 gazebo_ros_diff_drive 实现差速驱动控制                    -->
+  <!-- 发布话题: /cmd_vel, /odom, /tf                               -->
+  <!-- ============================================================ -->
+  <gazebo>
+    <plugin name="diff_drive" filename="libgazebo_ros_diff_drive.so">
+
+      <!-- 发布和订阅的话题 -->
+      <ros>
+        <namespace>/</namespace>
+      </ros>
+
+      <!-- 更新频率 (Hz) -->
+      <update_rate>50</update_rate>
+
+      <!-- 轮子关节名称 -->
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
+
+      <!-- 轮子参数 -->
+      <wheel_separation>0.35</wheel_separation>   <!-- 2 * 0.175 = 0.35m -->
+      <wheel_diameter>0.15</wheel_diameter>
+
+      <!-- 速度限制 (与需求文档一致) -->
+      <max_wheel_torque>20.0</max_wheel_torque>
+      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+
+      <!-- 发布里程计 -->
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <publish_wheel_tf>true</publish_wheel_tf>
+
+      <!-- 坐标系 -->
+      <odometry_frame>odom</odometry_frame>
+      <robot_base_frame>base_link</robot_base_frame>
+
+      <!-- 协方差矩阵 (3x3行主序) -->
+      <covariance_x>0.0001</covariance_x>
+      <covariance_y>0.0001</covariance_y>
+      <covariance_yaw>0.001</covariance_yaw>
+
+    </plugin>
+  </gazebo>
+
+  <!-- ============================================================ -->
+  <!-- Gazebo 激光雷达插件                                           -->
+  <!-- 使用 gazebo_ros_laser 发布 LaserScan 消息                     -->
+  <!-- 话题: /scan, 坐标系: laser_link                               -->
+  <!-- ============================================================ -->
+  <gazebo reference="laser_link">
+    <sensor type="gpu_lidar" name="laser_sensor">
+      <always_on>true</always_on>
+      <update_rate>10</update_rate>   <!-- 10Hz 扫描频率 -->
+      <visualize>true</visualize>
+
+      <pose>0 0 0 0 0 0</pose>
+
+      <lidar>
+        <scan>
+          <horizontal>
+            <samples>360</samples>        <!-- 360度扫描 -->
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>6.283185307179586</max_angle>   <!-- 2*pi -->
+          </horizontal>
+          <vertical>
+            <samples>1</samples>
+            <resolution>1</resolution>
+            <min_angle>0</min_angle>
+            <max_angle>0</max_angle>
+          </vertical>
+        </scan>
+        <range>
+          <min>0.1</min>                  <!-- 最小扫描距离 0.1m -->
+          <max>5.0</max>                  <!-- 最大扫描距离 5.0m -->
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </lidar>
+
+      <plugin name="laser_plugin" filename="libgazebo_ros_laser.so">
+        <ros>
+          <namespace>/</namespace>
+        </ros>
+        <frame_name>laser_link</frame_name>
+        <output_type>sensor_msgs/LaserScan</output_type>
+        <topic_name>/scan</topic_name>
+      </plugin>
+
+    </sensor>
+  </gazebo>
+
+  <!-- ============================================================ -->
+  <!-- Gazebo 视觉材质配置                                           -->
+  <!-- ============================================================ -->
+
+  <!-- base_link 蓝色金属质感 -->
+  <gazebo reference="base_link">
+    <material>Gazebo/Blue</material>
+    <mu1>0.8</mu1>
+    <mu2>0.8</mu2>
+  </gazebo>
+
+  <!-- 驱动轮 深灰色橡胶质感 -->
+  <gazebo reference="left_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+  </gazebo>
+
+  <gazebo reference="right_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1>1.0</mu1>
+    <mu2>1.0</mu2>
+  </gazebo>
+
+  <!-- 随动轮 -->
+  <gazebo reference="caster_wheel_link">
+    <material>Gazebo/DarkGrey</material>
+    <mu1>0.5</mu1>
+    <mu2>0.5</mu2>
+  </gazebo>
+
+  <!-- 激光雷达 -->
+  <gazebo reference="laser_link">
+    <material>Gazebo/Black</material>
+  </gazebo>
+
+</robot>

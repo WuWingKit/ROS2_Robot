@@ -1,0 +1,422 @@
+<?xml version="1.0" ?>
+<sdf version="1.6">
+  <world name="robot_world">
+
+    <!-- ============================================================ -->
+    <!-- 物理引擎配置                                                   -->
+    <!-- ============================================================ -->
+    <physics type="ode">
+      <max_step_size>0.001</max_step_size>
+      <real_time_factor>1.0</real_time_factor>
+      <real_time_update_rate>1000</real_time_update_rate>
+    </physics>
+
+    <!-- ============================================================ -->
+    <!-- 场景配置                                                       -->
+    <!-- 长8m x 宽5m, 灰色水泥质感地面, 0.05m高                        -->
+    <!-- ============================================================ -->
+    <scene>
+      <ambient>0.5 0.5 0.5 1.0</ambient>
+      <background>0.7 0.7 0.7 1.0</background>
+      <shadows>false</shadows>
+    </scene>
+
+    <!-- 光照 -->
+    <light type="directional" name="sun">
+      <pose>0 0 10 0 0 0</pose>
+      <diffuse>0.8 0.8 0.8 1</diffuse>
+      <specular>0.2 0.2 0.2 1</specular>
+      <direction>-0.5 0.5 -0.9</direction>
+    </light>
+
+    <!-- ============================================================ -->
+    <!-- 地面 (长8m x 宽5m x 高0.05m, 灰色水泥质感)                   -->
+    <!-- ============================================================ -->
+    <model name="ground_plane">
+      <static>true</static>
+      <pose>4.0 2.5 0.025 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box>
+              <size>8.0 5.0 0.05</size>
+            </box>
+          </geometry>
+          <material>
+            <ambient>0.5 0.5 0.5 1</ambient>
+            <diffuse>0.5 0.5 0.5 1</diffuse>
+            <specular>0.3 0.3 0.3 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box>
+              <size>8.0 5.0 0.05</size>
+            </box>
+          </geometry>
+          <surface>
+            <friction>
+              <ode>
+                <mu>1.0</mu>
+                <mu2>1.0</mu2>
+              </ode>
+            </friction>
+          </surface>
+        </collision>
+        <inertial>
+          <mass>1000</mass>
+          <inertia>
+            <ixx>1000</ixx>
+            <ixy>0</ixy>
+            <ixz>0</ixz>
+            <iyy>1000</iyy>
+            <iyz>0</iyz>
+            <izz>1000</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 墙壁围栏                                                      -->
+    <!-- 入口: 左侧中间 x=0.5, y=1.9~3.1, 宽度1.2m                    -->
+    <!-- 出口: 右侧中间 x=7.5, y=1.9~3.1, 宽度1.2m                    -->
+    <!-- 墙高: 0.5m, 墙厚: 0.05m                                      -->
+    <!-- ============================================================ -->
+
+    <!-- 左墙 - 下段 (入口下方) -->
+    <model name="wall_left_bottom">
+      <static>true</static>
+      <pose>0.5 0.95 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>100</mass>
+          <inertia>
+            <ixx>100</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>100</iyy><iyz>0</iyz><izz>100</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 左墙 - 上段 (入口上方) -->
+    <model name="wall_left_top">
+      <static>true</static>
+      <pose>0.5 4.05 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>100</mass>
+          <inertia>
+            <ixx>100</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>100</iyy><iyz>0</iyz><izz>100</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 右墙 - 下段 (出口下方) -->
+    <model name="wall_right_bottom">
+      <static>true</static>
+      <pose>7.5 0.95 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>100</mass>
+          <inertia>
+            <ixx>100</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>100</iyy><iyz>0</iyz><izz>100</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 右墙 - 上段 (出口上方) -->
+    <model name="wall_right_top">
+      <static>true</static>
+      <pose>7.5 4.05 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.05 1.9 0.5</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>100</mass>
+          <inertia>
+            <ixx>100</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>100</iyy><iyz>0</iyz><izz>100</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 上墙 (y=5, 连接左右墙顶部) -->
+    <model name="wall_top">
+      <static>true</static>
+      <pose>4.0 4.975 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>7.0 0.05 0.5</size></box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>7.0 0.05 0.5</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>100</mass>
+          <inertia>
+            <ixx>100</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>100</iyy><iyz>0</iyz><izz>100</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 下墙 (y=0, 连接左右墙底部) -->
+    <model name="wall_bottom">
+      <static>true</static>
+      <pose>4.0 0.025 0.25 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>7.0 0.05 0.5</size></box>
+          </geometry>
+          <material>
+            <ambient>0.6 0.6 0.6 1</ambient>
+            <diffuse>0.6 0.6 0.6 1</diffuse>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>7.0 0.05 0.5</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>100</mass>
+          <inertia>
+            <ixx>100</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>100</iyy><iyz>0</iyz><izz>100</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- ============================================================ -->
+    <!-- 障碍物 (5个, 黑色塑料质感)                                    -->
+    <!-- ============================================================ -->
+
+    <!-- 障碍物1: 正方体 边长0.6m, 中心(2.5, 1.5, 0.3) -->
+    <model name="obstacle_1">
+      <static>true</static>
+      <pose>2.5 1.5 0.3 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.6 0.6 0.6</size></box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0.15 0.15 0.15 1</diffuse>
+            <specular>0.3 0.3 0.3 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.6 0.6 0.6</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>50</mass>
+          <inertia>
+            <ixx>3</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>3</iyy><iyz>0</iyz><izz>3</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 障碍物2: 正方体 边长0.6m, 中心(2.5, 3.5, 0.3) -->
+    <model name="obstacle_2">
+      <static>true</static>
+      <pose>2.5 3.5 0.3 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.6 0.6 0.6</size></box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0.15 0.15 0.15 1</diffuse>
+            <specular>0.3 0.3 0.3 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.6 0.6 0.6</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>50</mass>
+          <inertia>
+            <ixx>3</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>3</iyy><iyz>0</iyz><izz>3</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 障碍物3: 长方体 0.8x0.4x0.3m, 中心(4.5, 2.0, 0.15) -->
+    <model name="obstacle_3">
+      <static>true</static>
+      <pose>4.5 2.0 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.8 0.4 0.3</size></box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0.15 0.15 0.15 1</diffuse>
+            <specular>0.3 0.3 0.3 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.8 0.4 0.3</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>50</mass>
+          <inertia>
+            <ixx>1.5</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>3</iyy><iyz>0</iyz><izz>3</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 障碍物4: 长方体 0.8x0.4x0.3m, 中心(4.5, 3.0, 0.15) -->
+    <model name="obstacle_4">
+      <static>true</static>
+      <pose>4.5 3.0 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <box><size>0.8 0.4 0.3</size></box>
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0.15 0.15 0.15 1</diffuse>
+            <specular>0.3 0.3 0.3 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <box><size>0.8 0.4 0.3</size></box>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>50</mass>
+          <inertia>
+            <ixx>1.5</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>3</iyy><iyz>0</iyz><izz>3</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+    <!-- 障碍物5: 圆柱体 直径0.5m 高0.3m, 中心(6.0, 2.5, 0.15) -->
+    <model name="obstacle_5">
+      <static>true</static>
+      <pose>6.0 2.5 0.15 0 0 0</pose>
+      <link name="link">
+        <visual name="visual">
+          <geometry>
+            <cylinder>
+              <radius>0.25</radius>
+              <length>0.3</length>
+            </cylinder>
+          </geometry>
+          <material>
+            <ambient>0.1 0.1 0.1 1</ambient>
+            <diffuse>0.15 0.15 0.15 1</diffuse>
+            <specular>0.3 0.3 0.3 1</specular>
+          </material>
+        </visual>
+        <collision name="collision">
+          <geometry>
+            <cylinder>
+              <radius>0.25</radius>
+              <length>0.3</length>
+            </cylinder>
+          </geometry>
+        </collision>
+        <inertial>
+          <mass>50</mass>
+          <inertia>
+            <ixx>1.5</ixx><ixy>0</ixy><ixz>0</ixz>
+            <iyy>1.5</iyy><iyz>0</iyz><izz>1.5</izz>
+          </inertia>
+        </inertial>
+      </link>
+    </model>
+
+  </world>
+</sdf>
