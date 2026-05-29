@@ -1,0 +1,26 @@
+# ROS2构建产物
+build/
+install/
+log/
+
+# Python缓存
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# IDE配置
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编辑器备份文件
+*~
+*.bak
+*.tmp
