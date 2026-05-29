@@ -52,14 +52,14 @@
   <!-- 话题: /scan, 坐标系: laser_link                               -->
   <!-- ============================================================ -->
   <gazebo reference="laser_link">
-    <sensor type="gpu_lidar" name="laser_sensor">
+    <sensor type="ray" name="laser_sensor">
       <always_on>true</always_on>
       <update_rate>10</update_rate>   <!-- 10Hz 扫描频率 -->
       <visualize>true</visualize>
 
       <pose>0 0 0 0 0 0</pose>
 
-      <lidar>
+      <ray>
         <scan>
           <horizontal>
             <samples>360</samples>        <!-- 360度扫描 -->
@@ -84,15 +84,19 @@
           <mean>0.0</mean>
           <stddev>0.01</stddev>
         </noise>
-      </lidar>
+      </ray>
 
-      <plugin name="laser_plugin" filename="libgazebo_ros_laser.so">
+      <plugin name="laser_plugin" filename="libgazebo_ros_ray_sensor.so">
         <ros>
           <namespace>/</namespace>
         </ros>
         <frame_name>laser_link</frame_name>
         <output_type>sensor_msgs/LaserScan</output_type>
         <topic_name>/scan</topic_name>
+        <ros>
+          <namespace>/</namespace>
+          <remapping>/laser_plugin/out:=/scan</remapping>
+        </ros>
       </plugin>
 
     </sensor>

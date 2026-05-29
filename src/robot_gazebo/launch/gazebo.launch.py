@@ -12,6 +12,7 @@ from launch.event_handlers import OnProcessExit
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
+from launch_ros.parameter_descriptions import ParameterValue
 
 
 def generate_launch_description():
@@ -54,7 +55,7 @@ def generate_launch_description():
         name='robot_state_publisher',
         output='screen',
         parameters=[{
-            'robot_description': robot_description_content,
+            'robot_description': ParameterValue(robot_description_content, value_type=str),
             'use_sim_time': LaunchConfiguration('use_sim_time'),
         }]
     )
