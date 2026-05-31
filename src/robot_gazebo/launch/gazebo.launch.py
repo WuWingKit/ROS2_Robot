@@ -93,7 +93,7 @@ def generate_launch_description():
             '-x', '1.0',
             '-y', '2.5',
             '-z', '0.0',
-            '-Y', '0.0',   # 朝向: 沿 +x 方向
+            '-Y', '3.14159',   # 朝向: 沿 +x 方向
         ],
         output='screen',
         parameters=[{
