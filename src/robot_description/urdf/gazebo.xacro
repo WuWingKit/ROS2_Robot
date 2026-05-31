@@ -18,8 +18,8 @@
       <update_rate>50</update_rate>
 
       <!-- 轮子关节名称 -->
-      <left_joint>right_wheel_joint</left_joint>
-      <right_joint>left_wheel_joint</right_joint>
+      <left_joint>left_wheel_joint</left_joint>
+      <right_joint>right_wheel_joint</right_joint>
 
       <!-- 轮子参数 -->
       <wheel_separation>0.35</wheel_separation>   <!-- 2 * 0.175 = 0.35m -->
