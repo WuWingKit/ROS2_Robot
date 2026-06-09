@@ -27,7 +27,7 @@
 
       <!-- 速度限制 (与需求文档一致) -->
       <max_wheel_torque>20.0</max_wheel_torque>
-      <max_wheel_acceleration>1.0</max_wheel_acceleration>
+      <max_wheel_acceleration>2.0</max_wheel_acceleration>
 
       <!-- 发布里程计 -->
       <publish_odom>true</publish_odom>
@@ -53,6 +53,7 @@
   <!-- ============================================================ -->
   <gazebo reference="laser_link">
     <sensor type="ray" name="laser_sensor">
+      
       <always_on>true</always_on>
       <update_rate>10</update_rate>   <!-- 10Hz 扫描频率 -->
       <visualize>true</visualize>
@@ -87,16 +88,9 @@
       </ray>
 
       <plugin name="laser_plugin" filename="libgazebo_ros_ray_sensor.so">
-        <ros>
-          <namespace>/</namespace>
-        </ros>
         <frame_name>laser_link</frame_name>
         <output_type>sensor_msgs/LaserScan</output_type>
         <topic_name>/scan</topic_name>
-        <ros>
-          <namespace>/</namespace>
-          <remapping>/laser_plugin/out:=/scan</remapping>
-        </ros>
       </plugin>
 
     </sensor>
@@ -116,8 +110,8 @@
   <!-- 驱动轮 深灰色橡胶质感 -->
   <gazebo reference="left_wheel_link">
     <material>Gazebo/DarkGrey</material>
-    <mu1>1.0</mu1>
-    <mu2>1.0</mu2>
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
   </gazebo>
 
   <gazebo reference="right_wheel_link">
@@ -129,8 +123,8 @@
   <!-- 随动轮 -->
   <gazebo reference="caster_wheel_link">
     <material>Gazebo/DarkGrey</material>
-    <mu1>0.5</mu1>
-    <mu2>0.5</mu2>
+    <mu1>1.5</mu1>
+    <mu2>1.5</mu2>
   </gazebo>
 
   <!-- 激光雷达 -->
