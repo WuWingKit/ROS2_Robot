@@ -27,10 +27,11 @@
       <material name="robot_blue"/>
     </visual>
 
+    <!-- 碰撞体抬高0.05m离地, 避免车身底盘拖地(否则严重阻碍旋转); 视觉体仍为规范0.25高 -->
     <collision>
-      <origin xyz="0 0 ${0.25/2}" rpy="0 0 0"/>
+      <origin xyz="0 0 0.15" rpy="0 0 0"/>
       <geometry>
-        <box size="0.5 0.3 0.25"/>
+        <box size="0.5 0.3 0.20"/>
       </geometry>
     </collision>
 
