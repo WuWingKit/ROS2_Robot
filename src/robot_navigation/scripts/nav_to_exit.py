@@ -20,11 +20,11 @@ from sensor_msgs.msg import LaserScan
 from nav2_msgs.action import NavigateToPose
 
 
-# 地图由 Cartographer 构建, 其 map 坐标系锚定在机器人出生点 Gazebo(1.0,2.5)。
-# 因此 map 系下出生点≈(0,0); 出口在 Gazebo(7.5,2.5), 相对出生点位移 +6.5m(x)。
-# 脚本先让 AMCL 收敛得到真实出生位姿 P0, 再以 P0+位移 作为出口目标, 对坐标系偏移鲁棒。
-INIT_GUESS = (0.0, 0.0)     # map 系下出生点初始猜测
-EXIT_OFFSET = (6.5, 0.0)    # 出口相对出生点的位移(入口1.0→出口7.5)
+# 地图由 Cartographer 构建, 其 map 坐标系与 Gazebo 世界系存在平移+轻微旋转。
+# 经地图图像解析得到实际位置(map系)：入口缺口中心(-0.95,-0.1), 出口缺口中心(6.9,-0.1)。
+# 机器人出生于 Gazebo(1.0,2.5)≈入口右侧0.5m → map(-0.45,-0.1)。
+INIT_GUESS = (-0.45, -0.1)   # map 系出生点(AMCL 初始猜测)
+GOAL_ABS = (6.5, -0.1)       # map 系出口目标(略入内, 保证可达)
 ARRIVE_TOL = 0.35    # 到达阈值(m)
 COLLISION_DIST = 0.12  # 雷达min 0.1, 小于此视为碰撞
 
@@ -91,7 +91,7 @@ class NavVerifier(Node):
 def main():
     rclpy.init()
     n = NavVerifier()
-    n.goal = (EXIT_OFFSET[0], EXIT_OFFSET[1])
+    n.goal = GOAL_ABS
     timeout = float(sys.argv[1]) if len(sys.argv) > 1 else 150.0
 
     # wait for amcl + scan
@@ -99,12 +99,11 @@ def main():
     while n.cur is None and time.time() - t0 < 20:
         rclpy.spin_once(n, timeout_sec=0.2)
     n.set_initial_pose()
-    # 让 AMCL 收敛, 读取真实出生位姿 P0
+    # 让 AMCL 收敛
     t0 = time.time()
     while time.time() - t0 < 4:
         rclpy.spin_once(n, timeout_sec=0.1)
     p0 = n.cur if n.cur else INIT_GUESS
-    n.goal = (p0[0] + EXIT_OFFSET[0], p0[1] + EXIT_OFFSET[1])
     print('localized start=(%.2f,%.2f)  ->  goal=(%.2f,%.2f)' % (p0[0], p0[1], n.goal[0], n.goal[1]))
     n.send_goal()
 
