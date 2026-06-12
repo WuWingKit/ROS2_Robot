@@ -56,10 +56,13 @@
         </noise>
       </ray>
       <plugin name="laser_plugin" filename="libgazebo_ros_ray_sensor.so">
-        <ros><namespace>/</namespace></ros>
-        <frame_name>laser_link</frame_name>
+        <!-- ROS2 ray_sensor 默认发布到 ~/out, 通过 remapping 输出到 /scan (作业要求话题名) -->
+        <ros>
+          <namespace>/</namespace>
+          <remapping>~/out:=/scan</remapping>
+        </ros>
         <output_type>sensor_msgs/LaserScan</output_type>
-        <topic_name>/scan</topic_name>
+        <frame_name>laser_link</frame_name>
       </plugin>
     </sensor>
   </gazebo>
