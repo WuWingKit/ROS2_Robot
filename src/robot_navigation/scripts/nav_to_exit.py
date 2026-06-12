@@ -75,7 +75,7 @@ class NavVerifier(Node):
             self.init_pub.publish(p)
             rclpy.spin_once(self, timeout_sec=0.1)
             time.sleep(0.1)
-        self.get_logger().info('initial pose set at %s' % str(START))
+        self.get_logger().info('initial pose set at %s' % str(INIT_GUESS))
 
     def send_goal(self):
         self.ac.wait_for_server()
