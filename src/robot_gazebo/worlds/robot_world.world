@@ -34,7 +34,7 @@
     <!-- ============================================================ -->
     <model name="ground_plane">
       <static>true</static>
-      <pose>4.0 2.5 0.025 0 0 0</pose>
+      <pose>4.0 2.5 -0.025 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -325,7 +325,7 @@
     <!-- 障碍物3: 长方体 0.8x0.4x0.3m, 中心(4.5, 2.0, 0.15) -->
     <model name="obstacle_3">
       <static>true</static>
-      <pose>4.5 2.0 0.21 0 0 0</pose>
+      <pose>4.5 2.0 0.15 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -355,7 +355,7 @@
     <!-- 障碍物4: 长方体 0.8x0.4x0.3m, 中心(4.5, 3.0, 0.15) -->
     <model name="obstacle_4">
       <static>true</static>
-      <pose>4.5 3.0 0.21 0 0 0</pose>
+      <pose>4.5 3.0 0.15 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
@@ -385,7 +385,7 @@
     <!-- 障碍物5: 圆柱体 直径0.5m 高0.3m, 中心(6.0, 2.5, 0.15) -->
     <model name="obstacle_5">
       <static>true</static>
-      <pose>6.0 2.5 0.21 0 0 0</pose>
+      <pose>6.0 2.5 0.15 0 0 0</pose>
       <link name="link">
         <visual name="visual">
           <geometry>
