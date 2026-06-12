@@ -38,6 +38,12 @@ def generate_launch_description():
         choices=['slam', 'nav']
     )
 
+    use_rviz_arg = DeclareLaunchArgument(
+        'use_rviz',
+        default_value='true',
+        description='是否启动 RViz (无头测试置 false)'
+    )
+
     # ================================================================
     # Gazebo 仿真场景 (始终启动)
     # ================================================================
@@ -59,6 +65,8 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': LaunchConfiguration('use_sim_time'),
+            'use_rsp': 'false',  # gazebo.launch 已提供 robot_state_publisher, 避免重复
+            'use_rviz': LaunchConfiguration('use_rviz'),
         }.items(),
         condition=IfCondition(
             LaunchConfiguration('mode', default='slam').equals('slam')
@@ -74,6 +82,7 @@ def generate_launch_description():
         ),
         launch_arguments={
             'use_sim_time': LaunchConfiguration('use_sim_time'),
+            'use_rviz': LaunchConfiguration('use_rviz'),
         }.items(),
         condition=IfCondition(
             LaunchConfiguration('mode', default='slam').equals('nav')
@@ -83,6 +92,7 @@ def generate_launch_description():
     return LaunchDescription([
         use_sim_time_arg,
         mode_arg,
+        use_rviz_arg,
         gazebo_launch,
         slam_launch,
         nav_launch,

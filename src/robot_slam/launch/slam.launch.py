@@ -2,6 +2,7 @@ import os
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, Command
 from launch_ros.actions import Node
@@ -57,6 +58,11 @@ def generate_launch_description():
         description='Name of lua file for cartographer'
     )
 
+    # 是否启动 robot_state_publisher (经 full_system 调用时由 gazebo.launch 提供, 置 false 避免重复)
+    use_rsp_arg = DeclareLaunchArgument('use_rsp', default_value='true')
+    # 是否启动 RViz (无头测试置 false)
+    use_rviz_arg = DeclareLaunchArgument('use_rviz', default_value='true')
+
     # ================================================================
     # Robot State Publisher 节点
     # 发布机器人 TF 坐标变换 (base_link -> laser_link 等)
@@ -66,6 +72,7 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
+        condition=IfCondition(LaunchConfiguration('use_rsp')),
         parameters=[{
             'robot_description': ParameterValue(Command(['xacro ', xacro_file]), value_type=str),
             'use_sim_time': LaunchConfiguration('use_sim_time'),
@@ -120,6 +127,7 @@ def generate_launch_description():
         name='rviz2',
         arguments=['-d', rviz_config_file],
         output='screen',
+        condition=IfCondition(LaunchConfiguration('use_rviz')),
         parameters=[{
             'use_sim_time': LaunchConfiguration('use_sim_time'),
         }],
@@ -131,6 +139,8 @@ def generate_launch_description():
         publish_period_sec_arg,
         configuration_directory_arg,
         configuration_basename_arg,
+        use_rsp_arg,
+        use_rviz_arg,
         robot_state_publisher_node,
         cartographer_node,
         occupancy_grid_node,
