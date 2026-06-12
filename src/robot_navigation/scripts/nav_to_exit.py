@@ -20,10 +20,13 @@ from sensor_msgs.msg import LaserScan
 from nav2_msgs.action import NavigateToPose
 
 
-START = (0.5, 2.5)   # 入口
-GOAL = (7.5, 2.5)    # 出口
-ARRIVE_TOL = 0.30    # 到达阈值(m)
-COLLISION_DIST = 0.13  # 机器人半径约0.18, 雷达min 0.1, 小于此视为碰撞
+# 地图由 Cartographer 构建, 其 map 坐标系锚定在机器人出生点 Gazebo(1.0,2.5)。
+# 因此 map 系下出生点≈(0,0); 出口在 Gazebo(7.5,2.5), 相对出生点位移 +6.5m(x)。
+# 脚本先让 AMCL 收敛得到真实出生位姿 P0, 再以 P0+位移 作为出口目标, 对坐标系偏移鲁棒。
+INIT_GUESS = (0.0, 0.0)     # map 系下出生点初始猜测
+EXIT_OFFSET = (6.5, 0.0)    # 出口相对出生点的位移(入口1.0→出口7.5)
+ARRIVE_TOL = 0.35    # 到达阈值(m)
+COLLISION_DIST = 0.12  # 雷达min 0.1, 小于此视为碰撞
 
 
 def yaw_to_quat(yaw):
@@ -56,8 +59,8 @@ class NavVerifier(Node):
         p = PoseWithCovarianceStamped()
         p.header.frame_id = 'map'
         p.header.stamp = self.get_clock().now().to_msg()
-        p.pose.pose.position.x = float(START[0])
-        p.pose.pose.position.y = float(START[1])
+        p.pose.pose.position.x = float(INIT_GUESS[0])
+        p.pose.pose.position.y = float(INIT_GUESS[1])
         qx, qy, qz, qw = yaw_to_quat(0.0)
         p.pose.pose.orientation.z = qz
         p.pose.pose.orientation.w = qw
@@ -76,44 +79,53 @@ class NavVerifier(Node):
         g = NavigateToPose.Goal()
         g.pose.header.frame_id = 'map'
         g.pose.header.stamp = self.get_clock().now().to_msg()
-        g.pose.pose.position.x = float(GOAL[0])
-        g.pose.pose.position.y = float(GOAL[1])
+        g.pose.pose.position.x = float(self.goal[0])
+        g.pose.pose.position.y = float(self.goal[1])
         qx, qy, qz, qw = yaw_to_quat(0.0)
         g.pose.pose.orientation.z = qz
         g.pose.pose.orientation.w = qw
-        self.get_logger().info('sending goal %s' % str(GOAL))
+        self.get_logger().info('sending goal %s' % str(self.goal))
         return self.ac.send_goal_async(g)
 
 
 def main():
     rclpy.init()
     n = NavVerifier()
-    timeout = float(sys.argv[1]) if len(sys.argv) > 1 else 120.0
+    n.goal = (EXIT_OFFSET[0], EXIT_OFFSET[1])
+    timeout = float(sys.argv[1]) if len(sys.argv) > 1 else 150.0
 
     # wait for amcl + scan
     t0 = time.time()
     while n.cur is None and time.time() - t0 < 20:
         rclpy.spin_once(n, timeout_sec=0.2)
     n.set_initial_pose()
-    time.sleep(2.0)
+    # 让 AMCL 收敛, 读取真实出生位姿 P0
+    t0 = time.time()
+    while time.time() - t0 < 4:
+        rclpy.spin_once(n, timeout_sec=0.1)
+    p0 = n.cur if n.cur else INIT_GUESS
+    n.goal = (p0[0] + EXIT_OFFSET[0], p0[1] + EXIT_OFFSET[1])
+    print('localized start=(%.2f,%.2f)  ->  goal=(%.2f,%.2f)' % (p0[0], p0[1], n.goal[0], n.goal[1]))
     n.send_goal()
 
     start = time.time()
     reached = False
+    min_d = 99.0
     while time.time() - start < timeout:
         rclpy.spin_once(n, timeout_sec=0.2)
         if n.cur:
-            d = math.hypot(n.cur[0] - GOAL[0], n.cur[1] - GOAL[1])
+            d = math.hypot(n.cur[0] - n.goal[0], n.cur[1] - n.goal[1])
+            min_d = min(min_d, d)
             if d < ARRIVE_TOL:
                 reached = True
                 break
     dur = time.time() - start
     pos = n.cur
     print('=== NAV RESULT ===')
-    print('final_pose=%s  dist_to_goal=%.2f  collided=%s  dur=%.1fs' % (
+    print('final_pose=%s  dist_to_goal=%.2f  min_dist=%.2f  collided=%s  dur=%.1fs' % (
         ('(%.2f,%.2f)' % pos) if pos else 'None',
-        math.hypot(pos[0] - GOAL[0], pos[1] - GOAL[1]) if pos else -1,
-        n.collided, dur))
+        math.hypot(pos[0] - n.goal[0], pos[1] - n.goal[1]) if pos else -1,
+        min_d, n.collided, dur))
     print('RESULT: %s' % ('PASS' if (reached and not n.collided) else 'FAIL'))
     rclpy.shutdown()
 

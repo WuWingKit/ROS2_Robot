@@ -9,7 +9,7 @@ from launch_ros.actions import Node
 def generate_launch_description():
     rd = get_package_share_directory('robot_description')
     rn = get_package_share_directory('robot_navigation')
-    map_yaml = os.path.join(rn, 'config', 'map.yaml')
+    map_yaml = os.path.join(rn, 'maps', 'map.yaml')
     rviz_cfg = os.path.join(rd, 'config', 'display.rviz')
 
     return LaunchDescription([
