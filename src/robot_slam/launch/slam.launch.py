@@ -89,7 +89,7 @@ def generate_launch_description():
             '-configuration_basename', LaunchConfiguration('configuration_basename'),
         ],
         remappings=[
-            ('scan', '/laser_plugin/out'),
+            ('scan', '/scan'),
             ('odom', '/odom'),
         ],
     )
