@@ -15,6 +15,7 @@ import time
 import rclpy
 from rclpy.node import Node
 from rclpy.action import ActionClient
+from rclpy.parameter import Parameter
 from geometry_msgs.msg import PoseWithCovarianceStamped, PoseStamped
 from sensor_msgs.msg import LaserScan
 from nav2_msgs.action import NavigateToPose
@@ -35,7 +36,9 @@ def yaw_to_quat(yaw):
 
 class NavVerifier(Node):
     def __init__(self):
-        super().__init__('nav_to_exit')
+        # 必须使用仿真时间, 否则 initialpose 时间戳为墙钟时间, AMCL 无法变换(外推到未来)
+        super().__init__('nav_to_exit',
+                         parameter_overrides=[Parameter('use_sim_time', Parameter.Type.BOOL, True)])
         self.init_pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
         self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self.amcl_cb, 10)
         self.create_subscription(LaserScan, '/scan', self.scan_cb, 10)
@@ -94,14 +97,15 @@ def main():
     n.goal = GOAL_ABS
     timeout = float(sys.argv[1]) if len(sys.argv) > 1 else 150.0
 
-    # wait for amcl + scan
+    # 先让仿真时钟/scan/TF 就绪(用 sim time, 时钟需 /clock 填充)
     t0 = time.time()
-    while n.cur is None and time.time() - t0 < 20:
-        rclpy.spin_once(n, timeout_sec=0.2)
+    while time.time() - t0 < 6:
+        rclpy.spin_once(n, timeout_sec=0.1)
+    # 多次发布初始位姿确保 AMCL 接收
     n.set_initial_pose()
     # 让 AMCL 收敛
     t0 = time.time()
-    while time.time() - t0 < 4:
+    while time.time() - t0 < 5:
         rclpy.spin_once(n, timeout_sec=0.1)
     p0 = n.cur if n.cur else INIT_GUESS
     print('localized start=(%.2f,%.2f)  ->  goal=(%.2f,%.2f)' % (p0[0], p0[1], n.goal[0], n.goal[1]))
