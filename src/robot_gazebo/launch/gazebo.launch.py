@@ -82,7 +82,7 @@ def generate_launch_description():
     # ================================================================
     # 在 Gazebo 中生成机器人模型
     # 使用 spawn_entity 将 URDF 模型放入仿真世界
-    # 初始位置: 场景入口附近 (x=1.5, y=2.5, z=0.0)
+    # 初始位置: 场景入口附近 (x=1.0, y=2.5, z=0.0)
     # ================================================================
     spawn_entity = Node(
         package='gazebo_ros',
@@ -90,10 +90,10 @@ def generate_launch_description():
         arguments=[
             '-topic', 'robot_description',
             '-entity', 'articubot_robot',
-            '-x', '1.5',
+            '-x', '1.0',
             '-y', '2.5',
             '-z', '0.0',
-            '-Y', '0.0',   # 朝向: 正X方向, 避开障碍物5圆柱(6.0, 2.5)
+            '-Y', '0.0',   # 朝向: 沿 +x 方向
         ],
         output='screen',
         parameters=[{

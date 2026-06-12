@@ -1,86 +1,199 @@
 <?xml version="1.0"?>
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="articubot_robot">
+
+  <!-- ============================================================ -->
+  <!-- 包含材质定义                                                    -->
+  <!-- ============================================================ -->
   <xacro:include filename="$(find robot_description)/urdf/materials.xacro"/>
 
-  <xacro:property name="M_total" value="2.0"/>
-  <xacro:property name="M_wheel" value="0.2"/>
-  <xacro:property name="M_caster" value="0.1"/>
-  <xacro:property name="M_body" value="${M_total - 2*M_wheel - M_caster}"/>
+  <!-- ============================================================ -->
+  <!-- 全局参数                                                       -->
+  <!-- ============================================================ -->
+  <xacro:property name="M_total" value="2.0"/>        <!-- 总质量 (kg) -->
+  <xacro:property name="M_wheel" value="0.2"/>        <!-- 驱动轮质量 (kg) -->
+  <xacro:property name="M_caster" value="0.1"/>       <!-- 随动轮质量 (kg) -->
+  <xacro:property name="M_body" value="${M_total - 2*M_wheel - M_caster}"/> <!-- 主体质量 (kg) -->
 
-  <!-- base_link: 0.5x0.3x0.25m, 蓝色 -->
+  <!-- ============================================================ -->
+  <!-- 主体 (base_link)                                              -->
+  <!-- 尺寸: 0.5m x 0.3m x 0.25m                                    -->
+  <!-- ============================================================ -->
   <link name="base_link">
     <visual>
       <origin xyz="0 0 ${0.25/2}" rpy="0 0 0"/>
-      <geometry><box size="0.5 0.3 0.25"/></geometry>
+      <geometry>
+        <box size="0.5 0.3 0.25"/>
+      </geometry>
       <material name="robot_blue"/>
     </visual>
+
     <collision>
       <origin xyz="0 0 ${0.25/2}" rpy="0 0 0"/>
-      <geometry><box size="0.48 0.28 0.25"/></geometry>
+      <geometry>
+        <box size="0.5 0.3 0.25"/>
+      </geometry>
     </collision>
+
     <inertial>
       <origin xyz="0 0 ${0.25/2}" rpy="0 0 0"/>
       <mass value="${M_body}"/>
-      <inertia ixx="${M_body*(0.3*0.3+0.25*0.25)/12}" ixy="0.0" ixz="0.0"
-               iyy="${M_body*(0.5*0.5+0.25*0.25)/12}" iyz="0.0"
+      <inertia ixx="${M_body*(0.3*0.3+0.25*0.25)/12}"
+               ixy="0.0"
+               ixz="0.0"
+               iyy="${M_body*(0.5*0.5+0.25*0.25)/12}"
+               iyz="0.0"
                izz="${M_body*(0.5*0.5+0.3*0.3)/12}"/>
     </inertial>
   </link>
 
-  <!-- 左驱动轮 -->
+  <!-- ============================================================ -->
+  <!-- 左驱动轮 (left_wheel_link)                                    -->
+  <!-- 直径: 0.15m, 宽度: 0.05m, 中心: (0.15, 0.175, 0.075)        -->
+  <!-- ============================================================ -->
   <joint name="left_wheel_joint" type="continuous">
-    <parent link="base_link"/><child link="left_wheel_link"/>
+    <parent link="base_link"/>
+    <child link="left_wheel_link"/>
     <origin xyz="0.15 0.175 0.075" rpy="${pi/2} 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
+
   <link name="left_wheel_link">
-    <visual><geometry><cylinder radius="0.075" length="0.05"/></geometry><material name="wheel_dark_grey"/></visual>
-    <collision><geometry><cylinder radius="0.075" length="0.05"/></geometry></collision>
+    <visual>
+      <geometry>
+        <cylinder radius="${0.15/2}" length="0.05"/>
+      </geometry>
+      <material name="wheel_dark_grey"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${0.15/2}" length="0.05"/>
+      </geometry>
+    </collision>
+
     <inertial>
       <mass value="${M_wheel}"/>
-      <inertia ixx="${M_wheel*0.075*0.075/2}" ixy="0" ixz="0" iyy="${M_wheel*0.075*0.075/2}" iyz="0" izz="${M_wheel*0.075*0.075/2}"/>
+      <inertia ixx="${M_wheel*(3*(0.15/2)*(0.15/2)+0.05*0.05)/12}"
+               ixy="0.0"
+               ixz="0.0"
+               iyy="${M_wheel*(3*(0.15/2)*(0.15/2)+0.05*0.05)/12}"
+               iyz="0.0"
+               izz="${M_wheel*(0.15/2)*(0.15/2)/2}"/>
     </inertial>
   </link>
 
-  <!-- 右驱动轮 -->
+  <!-- ============================================================ -->
+  <!-- 右驱动轮 (right_wheel_link)                                   -->
+  <!-- 直径: 0.15m, 宽度: 0.05m, 中心: (0.15, -0.175, 0.075)       -->
+  <!-- ============================================================ -->
   <joint name="right_wheel_joint" type="continuous">
-    <parent link="base_link"/><child link="right_wheel_link"/>
+    <parent link="base_link"/>
+    <child link="right_wheel_link"/>
     <origin xyz="0.15 -0.175 0.075" rpy="${pi/2} 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
+
   <link name="right_wheel_link">
-    <visual><geometry><cylinder radius="0.075" length="0.05"/></geometry><material name="wheel_dark_grey"/></visual>
-    <collision><geometry><cylinder radius="0.075" length="0.05"/></geometry></collision>
+    <visual>
+      <geometry>
+        <cylinder radius="${0.15/2}" length="0.05"/>
+      </geometry>
+      <material name="wheel_dark_grey"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${0.15/2}" length="0.05"/>
+      </geometry>
+    </collision>
+
     <inertial>
       <mass value="${M_wheel}"/>
-      <inertia ixx="${M_wheel*0.075*0.075/2}" ixy="0" ixz="0" iyy="${M_wheel*0.075*0.075/2}" iyz="0" izz="${M_wheel*0.075*0.075/2}"/>
+      <inertia ixx="${M_wheel*(3*(0.15/2)*(0.15/2)+0.05*0.05)/12}"
+               ixy="0.0"
+               ixz="0.0"
+               iyy="${M_wheel*(3*(0.15/2)*(0.15/2)+0.05*0.05)/12}"
+               iyz="0.0"
+               izz="${M_wheel*(0.15/2)*(0.15/2)/2}"/>
     </inertial>
   </link>
 
-  <!-- 随动轮 (固定关节，不旋转) -->
+  <!-- ============================================================ -->
+  <!-- 随动轮 (caster_wheel_link)                                    -->
+  <!-- 直径: 0.10m, 宽度: 0.05m, 中心: (-0.15, 0, 0.05)            -->
+  <!-- 固定关节 (fixed joint)                                        -->
+  <!-- ============================================================ -->
   <joint name="caster_wheel_joint" type="fixed">
-    <parent link="base_link"/><child link="caster_wheel_link"/>
+    <parent link="base_link"/>
+    <child link="caster_wheel_link"/>
     <origin xyz="-0.15 0.0 0.05" rpy="${pi/2} 0 0"/>
   </joint>
+
   <link name="caster_wheel_link">
-    <visual><geometry><cylinder radius="0.05" length="0.05"/></geometry><material name="caster_grey"/></visual>
-    <collision><geometry><cylinder radius="0.05" length="0.05"/></geometry></collision>
+    <visual>
+      <geometry>
+        <cylinder radius="${0.10/2}" length="0.05"/>
+      </geometry>
+      <material name="caster_grey"/>
+    </visual>
+
+    <collision>
+      <geometry>
+        <cylinder radius="${0.10/2}" length="0.05"/>
+      </geometry>
+    </collision>
+
     <inertial>
       <mass value="${M_caster}"/>
-      <inertia ixx="${M_caster*0.05*0.05/2}" ixy="0" ixz="0" iyy="${M_caster*0.05*0.05/2}" iyz="0" izz="${M_caster*0.05*0.05/2}"/>
+      <inertia ixx="${M_caster*(3*(0.10/2)*(0.10/2)+0.05*0.05)/12}"
+               ixy="0.0"
+               ixz="0.0"
+               iyy="${M_caster*(3*(0.10/2)*(0.10/2)+0.05*0.05)/12}"
+               iyz="0.0"
+               izz="${M_caster*(0.10/2)*(0.10/2)/2}"/>
     </inertial>
   </link>
 
-  <!-- 激光雷达 z=0.27m, fixed joint -->
+  <!-- ============================================================ -->
+  <!-- 激光雷达 (laser_link)                                         -->
+  <!-- 安装在主体顶部中心: (0, 0, 0.25)                               -->
+  <!-- ============================================================ -->
   <joint name="laser_joint" type="fixed">
-    <parent link="base_link"/><child link="laser_link"/>
-    <origin xyz="0.0 0.0 0.27" rpy="0 0 0"/>
+    <parent link="base_link"/>
+    <child link="laser_link"/>
+    <origin xyz="0.0 0.0 0.26" rpy="0 0 0"/>
   </joint>
+
   <link name="laser_link">
-    <visual><geometry><cylinder radius="0.04" length="0.03"/></geometry><material name="lidar_dark"/></visual>
-    <collision><geometry><cylinder radius="0.04" length="0.03"/></geometry></collision>
-    <inertial><mass value="0.01"/><inertia ixx="0.000001" ixy="0" ixz="0" iyy="0.000001" iyz="0" izz="0.000001"/></inertial>
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.03"/>
+      </geometry>
+      <material name="lidar_dark"/>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <cylinder radius="0.04" length="0.03"/>
+      </geometry>
+    </collision>
+
+    <inertial>
+      <mass value="0.01"/>
+      <inertia ixx="0.000001"
+               ixy="0.0"
+               ixz="0.0"
+               iyy="0.000001"
+               iyz="0.0"
+               izz="0.000001"/>
+    </inertial>
   </link>
 
+  <!-- ============================================================ -->
+  <!-- Gazebo 插件配置                                               -->
+  <!-- ============================================================ -->
   <xacro:include filename="$(find robot_description)/urdf/gazebo.xacro"/>
+
 </robot>
