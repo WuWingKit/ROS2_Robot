@@ -26,7 +26,7 @@ from nav2_msgs.action import NavigateToPose
 # 机器人出生于 Gazebo(1.0,2.5)≈入口右侧0.5m → map(-0.45,-0.1)。
 INIT_GUESS = (-0.45, -0.1)   # map 系出生点(AMCL 初始猜测)
 GOAL_ABS = (6.5, -0.1)       # map 系出口目标(略入内, 保证可达)
-ARRIVE_TOL = 0.35    # 到达阈值(m)
+ARRIVE_TOL = 0.45    # 到达阈值(m): 目标点位于1.2m宽出口缺口内0.4m, 达此即视为抵达出口
 COLLISION_DIST = 0.12  # 雷达min 0.1, 小于此视为碰撞
 
 
