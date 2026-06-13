@@ -6,9 +6,9 @@ from launch.actions import (
     IncludeLaunchDescription,
     GroupAction,
 )
-from launch.conditions import IfCondition, UnlessCondition
+from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
-from launch.substitutions import LaunchConfiguration
+from launch.substitutions import LaunchConfiguration, PythonExpression
 from launch_ros.actions import Node
 
 
@@ -69,7 +69,7 @@ def generate_launch_description():
             'use_rviz': LaunchConfiguration('use_rviz'),
         }.items(),
         condition=IfCondition(
-            LaunchConfiguration('mode', default='slam').equals('slam')
+            PythonExpression(["'", LaunchConfiguration('mode'), "' == 'slam'"])
         )
     )
 
@@ -85,7 +85,7 @@ def generate_launch_description():
             'use_rviz': LaunchConfiguration('use_rviz'),
         }.items(),
         condition=IfCondition(
-            LaunchConfiguration('mode', default='slam').equals('nav')
+            PythonExpression(["'", LaunchConfiguration('mode'), "' == 'nav'"])
         )
     )
 
