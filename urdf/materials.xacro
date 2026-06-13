@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ============================================================ -->
+  <!-- 材质定义 (Materials)                                          -->
+  <!-- ============================================================ -->
+
+  <!-- 机器人主体：蓝色金属质感 -->
+  <material name="robot_blue">
+    <color rgba="0.15 0.35 0.85 1.0"/>
+  </material>
+
+  <!-- 轮子：深灰色 -->
+  <material name="wheel_dark_grey">
+    <color rgba="0.2 0.2 0.2 1.0"/>
+  </material>
+
+  <!-- 随动轮：深灰色 -->
+  <material name="caster_grey">
+    <color rgba="0.25 0.25 0.25 1.0"/>
+  </material>
+
+  <!-- 激光雷达：深灰色 -->
+  <material name="lidar_dark">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+
+  <!-- 地面：灰色水泥质感 (用于RViz预览) -->
+  <material name="ground_grey">
+    <color rgba="0.5 0.5 0.5 1.0"/>
+  </material>
+
+  <!-- 障碍物：黑色塑料质感 (用于RViz预览) -->
+  <material name="obstacle_black">
+    <color rgba="0.1 0.1 0.1 1.0"/>
+  </material>
+
+</robot>
