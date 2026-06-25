@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -u
 
 # One-command navigation smoke test for the course demo.
 # Run from the workspace root after sourcing ROS2:
@@ -12,6 +11,8 @@ source /opt/ros/humble/setup.bash
 if [ -f "${WORKSPACE_DIR}/install/setup.bash" ]; then
   source "${WORKSPACE_DIR}/install/setup.bash"
 fi
+
+set -u
 
 cleanup_ros_processes() {
   pkill -9 -f gzserver 2>/dev/null || true
