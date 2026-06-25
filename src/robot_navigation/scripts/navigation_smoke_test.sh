@@ -43,7 +43,10 @@ sleep 1
 
 echo "=== Build navigation packages ==="
 colcon build --symlink-install --packages-select robot_navigation robot_bringup robot_gazebo robot_description 2>&1 | tail -12
+
+set +u
 source install/setup.bash
+set -u
 
 echo "=== Start full system in nav mode ==="
 nohup ros2 launch robot_bringup full_system.launch.py mode:=nav use_rviz:=false > /tmp/robot_nav_smoke_full_system.log 2>&1 &
