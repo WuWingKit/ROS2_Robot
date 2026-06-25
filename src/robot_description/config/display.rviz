@@ -3,8 +3,6 @@ Panels:
     Name: Displays
   - Class: rviz_common/Views
     Name: Views
-  - Class: rviz_common/Tool Properties
-    Name: Tool Properties
 Visualization Manager:
   Class: ""
   Enabled: true
@@ -23,7 +21,6 @@ Visualization Manager:
       Line Style:
         Value: Lines
         Line Width: 0.02
-      Normal Cell Count: 0
       Plane: XY
       Plane Cell Count: 20
       Reference Frame: <Fixed Frame>
@@ -75,7 +72,6 @@ Visualization Manager:
       Color: 255; 80; 80
       Color Transformer: FlatColor
       Decay Time: 0
-      Invert Rainbow: false
       Max Color: 255; 255; 255
       Min Color: 0; 0; 0
       Position Transformer: XYZ
@@ -84,133 +80,19 @@ Visualization Manager:
       Size (m): 0.04
       Style: Points
       Use Fixed Frame: true
-
-    - Class: rviz_default_plugins/Map
-      Name: Map /map
-      Enabled: true
-      Value: true
-      Topic:
-        Value: /map
-        Depth: 1
-        Durability Policy: Transient Local
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-      Alpha: 0.7
-      Color Scheme: map
-      Draw Behind: true
-      Update Topic:
-        Value: /map_updates
-
-    - Class: rviz_default_plugins/Path
-      Name: Global Path /plan
-      Enabled: true
-      Value: true
-      Topic:
-        Value: /plan
-        Depth: 5
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-      Alpha: 1
-      Buffer Length: 1
-      Color: 25; 255; 0
-      Line Style: Lines
-      Line Width: 0.08
-      Offset:
-        X: 0
-        Y: 0
-        Z: 0.03
-      Pose Color: 255; 85; 255
-      Pose Style: None
-      Radius: 0.03
-
-    - Class: rviz_default_plugins/Odometry
-      Name: Odometry /odom
-      Enabled: true
-      Value: true
-      Topic:
-        Value: /odom
-        Depth: 10
-        Durability Policy: Volatile
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-      Angle Tolerance: 0.1
-      Covariance:
-        Orientation:
-          Alpha: 0.25
-          Color: 255; 255; 127
-          Color Style: Unique
-          Frame: Local
-          Offset: 1
-          Scale: 1
-          Value: false
-        Position:
-          Alpha: 0.25
-          Color: 204; 51; 204
-          Scale: 1
-          Value: false
-        Value: false
-      Keep: 80
-      Position Tolerance: 0.1
-      Shape:
-        Alpha: 1
-        Axes Length: 0.35
-        Axes Radius: 0.03
-        Color: 0; 170; 255
-        Head Length: 0.08
-        Head Radius: 0.06
-        Shaft Length: 0.25
-        Shaft Radius: 0.025
-        Value: Arrow
-
-    - Class: rviz_default_plugins/Map
-      Name: Global Costmap
-      Enabled: true
-      Value: true
-      Topic:
-        Value: /global_costmap/costmap
-        Depth: 1
-        Durability Policy: Transient Local
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-      Alpha: 0.35
-      Color Scheme: costmap
-      Draw Behind: false
-
-    - Class: rviz_default_plugins/Map
-      Name: Local Costmap
-      Enabled: true
-      Value: true
-      Topic:
-        Value: /local_costmap/costmap
-        Depth: 1
-        Durability Policy: Transient Local
-        History Policy: Keep Last
-        Reliability Policy: Reliable
-      Alpha: 0.45
-      Color Scheme: costmap
-      Draw Behind: false
+      Use rainbow: false
 
   Tools:
     - Class: rviz_default_plugins/Interact
     - Class: rviz_default_plugins/MoveCamera
     - Class: rviz_default_plugins/Select
-    - Class: rviz_default_plugins/SetInitialPose
-      Topic:
-        Value: /initialpose
-      Theta std deviation: 0.261799
-      X std deviation: 0.5
-      Y std deviation: 0.5
-    - Class: rviz_default_plugins/SetGoal
-      Topic:
-        Value: /goal_pose
   Transformation:
     Current:
       Class: rviz_default_plugins/TF
   Views:
     Current:
       Class: rviz_default_plugins/Orbit
-      Distance: 9
+      Distance: 5
       Focal Point:
         X: 0
         Y: 0
@@ -218,12 +100,12 @@ Visualization Manager:
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05
       Invert Z Axis: false
-      Name: Navigation View
+      Name: Model View
       Near Clip Distance: 0.01
-      Pitch: 1.5707
+      Pitch: 0.75
       Target Frame: base_link
       Value: Orbit (rviz_default_plugins)
-      Yaw: 0
+      Yaw: 0.78
     Saved: ~
 Window Geometry:
   Displays:

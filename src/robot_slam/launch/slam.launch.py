@@ -23,7 +23,7 @@ def generate_launch_description():
     xacro_file = os.path.join(robot_description_pkg, 'urdf', 'robot.xacro')
     cartographer_config_dir = os.path.join(robot_slam_pkg, 'config')
     cartographer_config_basename = 'cartographer.lua'
-    rviz_config_file = os.path.join(robot_description_pkg, 'config', 'display.rviz')
+    rviz_config_file = os.path.join(robot_description_pkg, 'config', 'navigation.rviz')
 
     # ================================================================
     # Launch 参数

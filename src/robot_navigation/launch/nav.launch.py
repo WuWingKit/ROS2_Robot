@@ -10,7 +10,7 @@ def generate_launch_description():
     rd = get_package_share_directory('robot_description')
     rn = get_package_share_directory('robot_navigation')
     map_yaml = os.path.join(rn, 'maps', 'map.yaml')
-    rviz_cfg = os.path.join(rd, 'config', 'display.rviz')
+    rviz_cfg = os.path.join(rd, 'config', 'navigation.rviz')
 
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='true'),
