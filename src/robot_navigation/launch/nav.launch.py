@@ -44,7 +44,9 @@ def generate_launch_description():
 
         # lifecycle_manager
         Node(package='nav2_lifecycle_manager', executable='lifecycle_manager', name='lifecycle_manager_navigation', output='screen',
-             parameters=[{'use_sim_time': True, 'autostart': True, 'node_names': ['map_server', 'amcl', 'planner_server', 'controller_server', 'behavior_server', 'bt_navigator']}]),
+             # Keep the manager on wall time so lifecycle bringup is not affected by
+             # Gazebo clock startup or reset jumps during repeated GUI tests.
+             parameters=[{'use_sim_time': False, 'autostart': True, 'node_names': ['map_server', 'amcl', 'planner_server', 'controller_server', 'behavior_server', 'bt_navigator']}]),
 
         # RViz
         Node(package='rviz2', executable='rviz2', name='rviz2',

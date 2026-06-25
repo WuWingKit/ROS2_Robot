@@ -147,29 +147,29 @@ Visualization Manager:
 
     - Class: rviz_default_plugins/Map
       Name: Global Costmap
-      Enabled: true
-      Value: true
+      Enabled: false
+      Value: false
       Topic:
         Value: /global_costmap/costmap
         Depth: 1
         Durability Policy: Transient Local
         History Policy: Keep Last
         Reliability Policy: Reliable
-      Alpha: 0.35
+      Alpha: 0.25
       Color Scheme: costmap
       Draw Behind: false
 
     - Class: rviz_default_plugins/Map
       Name: Local Costmap
-      Enabled: true
-      Value: true
+      Enabled: false
+      Value: false
       Topic:
         Value: /local_costmap/costmap
         Depth: 1
         Durability Policy: Transient Local
         History Policy: Keep Last
         Reliability Policy: Reliable
-      Alpha: 0.45
+      Alpha: 0.25
       Color Scheme: costmap
       Draw Behind: false
 
