@@ -46,8 +46,12 @@
   4) 自主导航(加载地图+Nav2+RViz)：
        ros2 launch robot_bringup full_system.launch.py mode:=nav
      自动从入口(0.5,2.5)导航到出口(7.5,2.5)：
-       python3 src/robot_navigation/scripts/nav_to_exit.py
+       ros2 run robot_navigation nav_to_exit.py --timeout 150
+     或直接运行一键无头验收：
+       bash src/robot_navigation/scripts/navigation_smoke_test.sh 150
      或在 RViz 用 "2D Pose Estimate" 设初始位姿、"Nav2 Goal" 设目标点。
+     详细录屏/测试流程：
+       docs/NAVIGATION_TEST_FLOW.md
 
 五、关键话题
   /scan        单线激光雷达数据(10Hz, 360°, 0.1~5m)
@@ -61,4 +65,5 @@
   - 若 Gazebo 端口占用报错(Address already in use)，先 pkill -9 gzserver。
   - 雷达话题统一为 /scan(由 ray_sensor 插件 ~/out 重映射而来)。
   - 机器人车身碰撞体离地 0.05m 以保证转向灵活(避免底盘拖地)。
+  - 自动导航脚本使用 map 坐标系目标点(6.5,-0.1)，对应 Gazebo 场景右侧出口。
 ============================================================
