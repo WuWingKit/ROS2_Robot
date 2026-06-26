@@ -41,14 +41,14 @@ controller_server:
     general_goal_checker:
       plugin: nav2_controller::SimpleGoalChecker
       xy_goal_tolerance: 0.25
-      yaw_goal_tolerance: 0.50
+      yaw_goal_tolerance: 0.25
       stateful: True
 
     FollowPath:
       plugin: dwb_core::DWBLocalPlanner
       debug_trajectory_details: True
-      # 差速驱动速度限制(贴合机器人能力: 线速度≤0.26, 角速度≤1.0)
-      min_vel_x: -0.1
+      # 1. 禁止倒车: min_vel_x=0, DWB不生成反向速度; backup recovery保留用于脱困
+      min_vel_x: 0.0
       max_vel_x: 0.26
       min_vel_y: 0.0
       max_vel_y: 0.0
@@ -56,14 +56,12 @@ controller_server:
       min_speed_xy: 0.0
       max_speed_xy: 0.26
       min_speed_theta: 0.0
-      # 加速度限制(DWB采样轨迹必需, 缺失会导致 No valid trajectories)
       acc_lim_x: 2.5
       acc_lim_y: 0.0
       acc_lim_theta: 3.2
       decel_lim_x: -2.5
       decel_lim_y: 0.0
       decel_lim_theta: -3.2
-      # 轨迹采样
       vx_samples: 20
       vy_samples: 0
       vtheta_samples: 40
@@ -77,24 +75,28 @@ controller_server:
       stateful: True
       critics: [RotateToGoal, Oscillation, BaseObstacle, GoalAlign, PathAlign, PathDist, GoalDist]
       BaseObstacle.scale: 0.02
-      PathAlign.scale: 32.0
-      PathAlign.forward_point_distance: 0.1
+      # 4. 路径振荡: 增大PathAlign/PathDist权重, 减少偏离路径导致的反复重规划
+      PathAlign.scale: 40.0
+      PathAlign.forward_point_distance: 0.2
       GoalAlign.scale: 24.0
       GoalAlign.forward_point_distance: 0.1
-      PathDist.scale: 32.0
+      PathDist.scale: 40.0
       GoalDist.scale: 24.0
-      RotateToGoal.scale: 32.0
-      RotateToGoal.slowing_factor: 5.0
-      RotateToGoal.lookahead_time: -1.0
+      # 2. 终点朝向对齐: RotateToGoal在终点强制旋转到目标朝向
+      RotateToGoal.scale: 40.0
+      RotateToGoal.slowing_factor: 8.0
+      RotateToGoal.lookahead_time: 2.0
       Oscillation.scale: 1.0
 
+# 4. 减少全局路径重规划频率, 避免来回切换路径方案
 planner_server:
   ros__parameters:
     use_sim_time: True
-    expected_planner_frequency: 20.0
+    expected_planner_frequency: 5.0
     planner_plugins: [GridBased]
     GridBased:
       plugin: nav2_navfn_planner/NavfnPlanner
+      tolerance: 0.5
 
 behavior_server:
   ros__parameters:
@@ -102,6 +104,22 @@ behavior_server:
     local_costmap_topic: /local_costmap/costmap_raw
     global_costmap_topic: /global_costmap/costmap_raw
     local_frame: odom
+    # 恢复行为: spin用于脱困旋转, backup用于倒车退出死角
+    recovery_plugins: [spin, backup, wait]
+    spin:
+      plugin: nav2_recoveries/Spin
+    backup:
+      plugin: nav2_recoveries/BackUp
+    wait:
+      plugin: nav2_recoveries/Wait
+    global_frame: odom
+    robot_base_frame: base_link
+    transform_timeout: 0.1
+    use_sim_time: true
+    simulate_ahead_time: 2.0
+    max_rotational_vel: 1.0
+    min_rotational_vel: 0.4
+    rotational_acc_lim: 3.2
 
 waypoint_follower:
   ros__parameters:
@@ -137,8 +155,9 @@ local_costmap:
           obstacle_min_range: 0.0
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.22
+        # 5. 离障碍物更远: 膨胀半径增大 + 代价衰减更平缓
+        cost_scaling_factor: 1.5
+        inflation_radius: 0.35
 
 global_costmap:
   global_costmap:
@@ -171,5 +190,6 @@ global_costmap:
           obstacle_min_range: 0.0
       inflation_layer:
         plugin: nav2_costmap_2d::InflationLayer
-        cost_scaling_factor: 3.0
-        inflation_radius: 0.22
+        # 5. 同上: 增大安全距离
+        cost_scaling_factor: 1.5
+        inflation_radius: 0.35
