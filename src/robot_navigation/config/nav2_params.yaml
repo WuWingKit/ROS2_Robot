@@ -104,22 +104,6 @@ behavior_server:
     local_costmap_topic: /local_costmap/costmap_raw
     global_costmap_topic: /global_costmap/costmap_raw
     local_frame: odom
-    # 恢复行为: spin用于脱困旋转, backup用于倒车退出死角
-    recovery_plugins: [spin, backup, wait]
-    spin:
-      plugin: nav2_recoveries/Spin
-    backup:
-      plugin: nav2_recoveries/BackUp
-    wait:
-      plugin: nav2_recoveries/Wait
-    global_frame: odom
-    robot_base_frame: base_link
-    transform_timeout: 0.1
-    use_sim_time: true
-    simulate_ahead_time: 2.0
-    max_rotational_vel: 1.0
-    min_rotational_vel: 0.4
-    rotational_acc_lim: 3.2
 
 waypoint_follower:
   ros__parameters:
