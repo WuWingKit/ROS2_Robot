@@ -85,7 +85,7 @@ Visualization Manager:
         Value: true
       Axis: Z
       Channel Name: intensity
-      Color: 255; 80; 80
+      Color: 255; 60; 60
       Color Transformer: FlatColor
       Decay Time: 0
       Max Color: 255; 255; 255
@@ -93,7 +93,7 @@ Visualization Manager:
       Position Transformer: XYZ
       Queue Size: 10
       Selectable: true
-      Size (m): 0.04
+      Size (m): 0.03
       Style: Points
       Use Fixed Frame: true
       Use rainbow: false
@@ -110,13 +110,36 @@ Visualization Manager:
         Reliability Policy: Reliable
       Alpha: 1
       Buffer Length: 1
-      Color: 25; 255; 0
+      Color: 160; 32; 240
       Line Style: Lines
-      Line Width: 0.08
+      Line Width: 0.06
       Offset:
         X: 0
         Y: 0
         Z: 0.03
+      Pose Color: 255; 85; 255
+      Pose Style: None
+      Radius: 0.03
+
+    - Class: rviz_default_plugins/Path
+      Name: Local Path /local_plan
+      Enabled: true
+      Value: true
+      Topic:
+        Value: /local_plan
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Alpha: 1
+      Buffer Length: 1
+      Color: 200; 80; 255
+      Line Style: Lines
+      Line Width: 0.10
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.05
       Pose Color: 255; 85; 255
       Pose Style: None
       Radius: 0.03
