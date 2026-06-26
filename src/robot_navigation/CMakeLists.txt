@@ -12,6 +12,7 @@ find_package(nav2_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(nav_msgs REQUIRED)
 find_package(tf2_ros REQUIRED)
+find_package(visualization_msgs REQUIRED)
 find_package(robot_state_publisher REQUIRED)
 
 install(DIRECTORY
@@ -23,8 +24,13 @@ install(DIRECTORY
 )
 
 install(PROGRAMS
+  scripts/aeb_keyboard_control.py
   scripts/auto_initial_pose.py
+  scripts/clear_bonus_visuals.py
+  scripts/clean_ros_demo.sh
+  scripts/nav_visualizer.py
   scripts/nav_to_exit.py
+  scripts/planner_compare.py
   DESTINATION lib/${PROJECT_NAME}
 )
 

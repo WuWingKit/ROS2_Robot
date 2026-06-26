@@ -1,52 +1,40 @@
 import os
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
-from launch.actions import (
-    DeclareLaunchArgument,
-    IncludeLaunchDescription,
-    GroupAction,
-)
+from launch.actions import DeclareLaunchArgument, IncludeLaunchDescription
 from launch.conditions import IfCondition
 from launch.launch_description_sources import PythonLaunchDescriptionSource
 from launch.substitutions import LaunchConfiguration, PythonExpression
-from launch_ros.actions import Node
 
 
 def generate_launch_description():
-
-    # ================================================================
-    # 获取包路径
-    # ================================================================
-    robot_description_pkg = get_package_share_directory('robot_description')
     robot_gazebo_pkg = get_package_share_directory('robot_gazebo')
     robot_slam_pkg = get_package_share_directory('robot_slam')
     robot_navigation_pkg = get_package_share_directory('robot_navigation')
 
-    # ================================================================
-    # Launch 参数
-    # ================================================================
     use_sim_time_arg = DeclareLaunchArgument(
         'use_sim_time',
         default_value='true',
-        description='Use simulation (Gazebo) clock if true'
+        description='Use simulation time'
     )
-
     mode_arg = DeclareLaunchArgument(
         'mode',
         default_value='slam',
-        description='Operation mode: slam (建图) or nav (导航)',
+        description='Operation mode: slam or nav',
         choices=['slam', 'nav']
     )
-
     use_rviz_arg = DeclareLaunchArgument(
         'use_rviz',
         default_value='true',
-        description='是否启动 RViz (无头测试置 false)'
+        description='Start RViz'
+    )
+    bonus_visuals_arg = DeclareLaunchArgument(
+        'bonus_visuals',
+        default_value='true',
+        description='Enable bonus visualization overlays in navigation mode'
     )
 
-    # ================================================================
-    # Gazebo 仿真场景 (始终启动)
-    # ================================================================
     gazebo_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(robot_gazebo_pkg, 'launch', 'gazebo.launch.py')
@@ -56,16 +44,13 @@ def generate_launch_description():
         }.items()
     )
 
-    # ================================================================
-    # SLAM 建图模式 (mode=slam)
-    # ================================================================
     slam_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(robot_slam_pkg, 'launch', 'slam.launch.py')
         ),
         launch_arguments={
             'use_sim_time': LaunchConfiguration('use_sim_time'),
-            'use_rsp': 'false',  # gazebo.launch 已提供 robot_state_publisher, 避免重复
+            'use_rsp': 'false',
             'use_rviz': LaunchConfiguration('use_rviz'),
         }.items(),
         condition=IfCondition(
@@ -73,9 +58,6 @@ def generate_launch_description():
         )
     )
 
-    # ================================================================
-    # 导航模式 (mode=nav)
-    # ================================================================
     nav_launch = IncludeLaunchDescription(
         PythonLaunchDescriptionSource(
             os.path.join(robot_navigation_pkg, 'launch', 'nav.launch.py')
@@ -83,6 +65,7 @@ def generate_launch_description():
         launch_arguments={
             'use_sim_time': LaunchConfiguration('use_sim_time'),
             'use_rviz': LaunchConfiguration('use_rviz'),
+            'bonus_visuals': LaunchConfiguration('bonus_visuals'),
         }.items(),
         condition=IfCondition(
             PythonExpression(["'", LaunchConfiguration('mode'), "' == 'nav'"])
@@ -93,6 +76,7 @@ def generate_launch_description():
         use_sim_time_arg,
         mode_arg,
         use_rviz_arg,
+        bonus_visuals_arg,
         gazebo_launch,
         slam_launch,
         nav_launch,

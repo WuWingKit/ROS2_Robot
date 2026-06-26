@@ -15,7 +15,6 @@ def generate_launch_description():
     return LaunchDescription([
         DeclareLaunchArgument('use_sim_time', default_value='true'),
         DeclareLaunchArgument('use_rviz', default_value='true'),
-        DeclareLaunchArgument('bonus_visuals', default_value='true'),
 
         LogInfo(msg='Starting Nav2 nodes directly...'),
 
@@ -49,14 +48,9 @@ def generate_launch_description():
              # Gazebo clock startup or reset jumps during repeated GUI tests.
              parameters=[{'use_sim_time': False, 'autostart': True, 'node_names': ['map_server', 'amcl', 'planner_server', 'controller_server', 'behavior_server', 'bt_navigator']}]),
 
-        # auto_initial_pose — 暂时禁用, 手动在RViz用2D Pose Estimate标定正确初始位姿
-        # Node(package='robot_navigation', executable='auto_initial_pose.py', name='auto_initial_pose', output='screen',
-        #      parameters=[{'use_sim_time': True}]),
-
-        # Bonus visualization overlays. These publish markers and path history only.
-        Node(package='robot_navigation', executable='nav_visualizer.py', name='nav_visualizer', output='screen',
-             parameters=[{'use_sim_time': True}],
-             condition=IfCondition(LaunchConfiguration('bonus_visuals'))),
+        # auto_initial_pose
+        Node(package='robot_navigation', executable='auto_initial_pose.py', name='auto_initial_pose', output='screen',
+             parameters=[{'use_sim_time': True}]),
 
         # RViz
         Node(package='rviz2', executable='rviz2', name='rviz2',

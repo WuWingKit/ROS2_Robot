@@ -168,6 +168,101 @@ Visualization Manager:
         Shaft Radius: 0.025
         Value: Arrow
 
+    - Class: rviz_default_plugins/Path
+      Name: Bonus Path History
+      Enabled: false
+      Value: false
+      Topic:
+        Value: /bonus/path_history
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Alpha: 1
+      Buffer Length: 1
+      Color: 0; 220; 120
+      Line Style: Lines
+      Line Width: 0.05
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.08
+      Pose Color: 0; 255; 160
+      Pose Style: None
+      Radius: 0.03
+
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Bonus Navigation Markers
+      Enabled: true
+      Value: true
+      Marker Topic:
+        Value: /bonus/navigation_markers
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Namespaces:
+        {}
+
+    - Class: rviz_default_plugins/Path
+      Name: Dijkstra Path /bonus/path_dijkstra
+      Enabled: true
+      Value: true
+      Topic:
+        Value: /bonus/path_dijkstra
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Alpha: 1
+      Buffer Length: 1
+      Color: 255; 180; 0
+      Line Style: Lines
+      Line Width: 0.05
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.11
+      Pose Color: 255; 180; 0
+      Pose Style: None
+      Radius: 0.03
+
+    - Class: rviz_default_plugins/Path
+      Name: A Star Path /bonus/path_astar
+      Enabled: true
+      Value: true
+      Topic:
+        Value: /bonus/path_astar
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Alpha: 1
+      Buffer Length: 1
+      Color: 0; 190; 255
+      Line Style: Lines
+      Line Width: 0.05
+      Offset:
+        X: 0
+        Y: 0
+        Z: 0.13
+      Pose Color: 0; 190; 255
+      Pose Style: None
+      Radius: 0.03
+
+    - Class: rviz_default_plugins/MarkerArray
+      Name: Planner Compare Markers
+      Enabled: true
+      Value: true
+      Marker Topic:
+        Value: /bonus/planner_compare_markers
+        Depth: 5
+        Durability Policy: Volatile
+        History Policy: Keep Last
+        Reliability Policy: Reliable
+      Namespaces:
+        {}
+
     - Class: rviz_default_plugins/Map
       Name: Global Costmap
       Enabled: false

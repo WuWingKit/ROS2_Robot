@@ -39,6 +39,7 @@ class NavVerifier(Node):
         super().__init__('nav_to_exit',
                          parameter_overrides=[Parameter('use_sim_time', Parameter.Type.BOOL, True)])
         self.init_pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
+        self.goal_pose_pub = self.create_publisher(PoseStamped, '/goal_pose', 10)
         self.create_subscription(PoseWithCovarianceStamped, '/amcl_pose', self.amcl_cb, 10)
         self.create_subscription(LaserScan, '/scan', self.scan_cb, 10)
         self.ac = ActionClient(self, NavigateToPose, '/navigate_to_pose')
@@ -90,6 +91,7 @@ class NavVerifier(Node):
         qx, qy, qz, qw = yaw_to_quat(0.0)
         g.pose.pose.orientation.z = qz
         g.pose.pose.orientation.w = qw
+        self.goal_pose_pub.publish(g.pose)
         self.get_logger().info('sending goal %s' % str(self.goal))
         return self.ac.send_goal_async(g)
 
