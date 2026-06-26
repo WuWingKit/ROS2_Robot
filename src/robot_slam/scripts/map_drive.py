@@ -48,7 +48,7 @@ class Driver(Node):
             rclpy.spin_once(self, timeout_sec=0.05)
             time.sleep(0.02)
 
-    def spin360(self, rate=0.5):
+    def spin360(self, rate=0.25):
         acc = 0.0
         prev = self.th
         while acc < 2 * math.pi:
@@ -80,9 +80,9 @@ class Driver(Node):
             while err < -math.pi:
                 err += 2 * math.pi
             if abs(err) > 0.35:
-                self.cmd(0.0, max(-0.5, min(0.5, 1.5 * err)))
+                self.cmd(0.0, max(-0.3, min(0.3, 1.0 * err)))
             else:
-                self.cmd(min(0.18, 0.4 * dist), max(-0.4, min(0.4, 1.2 * err)))
+                self.cmd(min(0.12, 0.3 * dist), max(-0.25, min(0.25, 0.8 * err)))
             time.sleep(0.02)
         self.stop()
 
