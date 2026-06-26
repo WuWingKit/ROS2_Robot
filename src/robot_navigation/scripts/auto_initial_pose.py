@@ -26,14 +26,14 @@ class AutoInitialPose(Node):
             'auto_initial_pose',
             parameter_overrides=[Parameter('use_sim_time', Parameter.Type.BOOL, True)]
         )
-        self.declare_parameter('map_offset_x', -1.45)
-        self.declare_parameter('map_offset_y', -2.60)
+        self.declare_parameter('map_offset_x', 0.0)
+        self.declare_parameter('map_offset_y', 0.0)
         self.declare_parameter('map_offset_yaw', 0.0)
         self.declare_parameter('initial_delay_sec', 6.0)
         self.declare_parameter('publish_count', 30)
         self.declare_parameter('publish_period_sec', 0.2)
-        self.declare_parameter('initial_cov_xy', 0.25)
-        self.declare_parameter('initial_cov_yaw', 0.07)
+        self.declare_parameter('initial_cov_xy', 0.5)
+        self.declare_parameter('initial_cov_yaw', 0.2)
 
         self.odom = None
         self.initial_pose_pub = self.create_publisher(PoseWithCovarianceStamped, '/initialpose', 10)
