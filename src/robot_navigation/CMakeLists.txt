@@ -23,6 +23,7 @@ install(DIRECTORY
 )
 
 install(PROGRAMS
+  scripts/auto_initial_pose.py
   scripts/nav_to_exit.py
   DESTINATION lib/${PROJECT_NAME}
 )

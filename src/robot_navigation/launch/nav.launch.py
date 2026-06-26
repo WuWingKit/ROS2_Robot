@@ -48,6 +48,10 @@ def generate_launch_description():
              # Gazebo clock startup or reset jumps during repeated GUI tests.
              parameters=[{'use_sim_time': False, 'autostart': True, 'node_names': ['map_server', 'amcl', 'planner_server', 'controller_server', 'behavior_server', 'bt_navigator']}]),
 
+        # auto_initial_pose
+        Node(package='robot_navigation', executable='auto_initial_pose.py', name='auto_initial_pose', output='screen',
+             parameters=[{'use_sim_time': True}]),
+
         # RViz
         Node(package='rviz2', executable='rviz2', name='rviz2',
              arguments=['-d', rviz_cfg],
